@@ -1,6 +1,5 @@
 import * as React from "react";
-import { motion } from "framer-motion";
-import { BiCheckCircle, BiEditAlt } from "react-icons/bi";
+import { BiCheck, BiCheckCircle, BiEditAlt, BiHelpCircle } from "react-icons/bi";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +8,12 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Icon } from "./icon";
 import { ChefFlipCard, type ChefFlipCardRestaurant } from "./chef-flip-card";
 import { RankingSlot } from "./ranking-slot";
@@ -187,18 +192,18 @@ export function PreferenceWindowBand({
     >
       <AccordionTrigger className="py-[10px] text-sm font-normal normal-case tracking-normal hover:no-underline">
         <div className="flex flex-1 items-center gap-3 pr-2 min-w-0">
-          <div className="flex flex-1 flex-col min-w-0 text-xl leading-8 uppercase tracking-widest">
-            <span className="font-sans font-light text-secondary-foreground">
+          <div className="flex flex-1 flex-col items-start gap-0 min-w-0">
+            <span className="font-sans font-semibold text-sm uppercase tracking-widest leading-5 text-secondary-foreground">
               {windowDate}
             </span>
-            <span className="font-sans font-semibold text-foreground truncate group-hover/accordion-trigger:underline underline-offset-4">
+            <span className="font-sans font-light text-xl tracking-[0.1em] leading-8 text-foreground truncate group-hover/accordion-trigger:underline underline-offset-4">
               {windowLabel}
             </span>
           </div>
           <div className="flex flex-col items-end gap-2 shrink-0">
             {minMet ? (
-              <Badge className="bg-success/15 text-success border-success/40">
-                <Icon as={BiCheckCircle} size="sm" />
+              <Badge variant="success">
+                <Icon as={BiCheck} size="sm" />
                 Min met
               </Badge>
             ) : filledCount === 0 ? (
@@ -209,7 +214,7 @@ export function PreferenceWindowBand({
               </Badge>
             )}
             {isVip && (
-              <span className="font-mono text-xs font-medium uppercase tracking-widest leading-4 text-secondary-foreground whitespace-nowrap">
+              <span className="hidden md:inline font-mono text-xs font-medium uppercase tracking-widest leading-4 text-secondary-foreground whitespace-nowrap">
                 VIP top 2 priority-weighted
               </span>
             )}
@@ -220,9 +225,30 @@ export function PreferenceWindowBand({
       <AccordionContent className="pt-0 pb-6">
         <Separator className="mb-6" />
         <div className="flex items-center justify-between mb-6">
-          <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-            {pool.length} chefs available
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+              {pool.length} chefs available
+            </span>
+            <TooltipProvider delayDuration={200}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label="How ranking works"
+                    className="inline-flex size-4 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+                  >
+                    <Icon as={BiHelpCircle} size="sm" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs text-center">
+                  Drag a chef from each window's pool into the slots on the
+                  right. Your top two per window receive VIP priority weighting
+                  in the matching engine. Click any day to expand and start
+                  ranking.
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
           {minMet && onConfirm && (
             <Button size="sm" onClick={onConfirm}>
               <Icon as={BiCheckCircle} size="sm" />
@@ -231,16 +257,14 @@ export function PreferenceWindowBand({
           )}
         </div>
         <div className="flex flex-col gap-6">
-          <div className="grid gap-6 xl:grid-cols-[1fr_360px] items-start">
+          <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px] items-start">
             {/* Chef pool */}
-            <div className="flex flex-col gap-4">
-              <motion.div
-                layout
-                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
-              >
+            <div className="flex flex-col gap-4 min-w-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {pool.map((restaurant) => (
                   <div
                     key={restaurant.id}
+                    className="overflow-visible"
                     draggable={!isInRanking(restaurant.id)}
                     onDragStart={() => handlePoolDragStart(restaurant.id)}
                     onDragEnd={() => {
@@ -265,12 +289,12 @@ export function PreferenceWindowBand({
                     />
                   </div>
                 ))}
-              </motion.div>
+              </div>
               {afterPool && <div className="pt-2">{afterPool}</div>}
             </div>
 
             {/* Ranking slots column */}
-            <aside className="flex flex-col gap-3 xl:sticky xl:top-28 xl:self-start">
+            <aside className="flex flex-col gap-3 min-w-0 xl:sticky xl:top-28 xl:self-start">
               <div className="flex items-center justify-between">
                 <span className="font-sans text-sm font-semibold uppercase tracking-wider">
                   Ranking

@@ -6,12 +6,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
-import {
-  BiArrowBack,
-  BiCheck,
-  BiSend,
-  BiMobileAlt,
-} from "react-icons/bi";
+import { BiArrowBack, BiCheck, BiMobileAlt } from "react-icons/bi";
 import { toast } from "sonner";
 import {
   TIME_WINDOWS,
@@ -26,7 +21,6 @@ import {
 import {
   Icon,
   ThemeToggle,
-  PageHeader,
   CanvasProgressStrip,
   PreferenceWindowBand,
   type CanvasWindowItem,
@@ -363,12 +357,7 @@ export default function PreferencePortalCanvas() {
         rightSlot={
           <>
             <ThemeToggle />
-            <Button
-              size="sm"
-              disabled={!allConfirmed}
-              onClick={handleSubmit}
-            >
-              <Icon as={BiSend} size="sm" />
+            <Button disabled={!allConfirmed} onClick={handleSubmit}>
               Review &amp; submit
             </Button>
           </>
@@ -377,24 +366,11 @@ export default function PreferencePortalCanvas() {
 
       <div className="w-full px-6 md:px-10 xl:px-14 pt-4 pb-24 flex flex-col gap-6">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon-sm" asChild aria-label="Back">
-              <Link href="/">
-                <Icon as={BiArrowBack} size="sm" />
-              </Link>
-            </Button>
-            <PageHeader
-              eyebrow={`Sarah Chen · Tier 1 VIP · ${TIME_WINDOWS.length} windows`}
-              title="Rank your chefs"
-              size="sm"
-              className="mb-0"
-              meta={
-                <span>
-                  {confirmedWindowsList.length} / {TIME_WINDOWS.length} confirmed
-                </span>
-              }
-            />
-          </div>
+          <Button variant="ghost" size="icon-sm" asChild aria-label="Back">
+            <Link href="/">
+              <Icon as={BiArrowBack} size="sm" />
+            </Link>
+          </Button>
           <Button variant="outline" size="sm" asChild>
             <Link href="/swipe">
               <Icon as={BiMobileAlt} size="sm" />
@@ -403,17 +379,26 @@ export default function PreferencePortalCanvas() {
           </Button>
         </div>
 
-        <p className="max-w-3xl text-sm text-muted-foreground">
-          Drag a chef from each window's pool into the slots on the right. Your
-          top two per window receive VIP priority weighting in the matching
-          engine. Click any day to expand and start ranking.
-        </p>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-start justify-between gap-6">
+              <h1 className="font-sans font-light tracking-tight text-3xl sm:text-4xl md:text-5xl">
+                Rank your chefs
+              </h1>
+              <div className="font-mono text-xs uppercase tracking-wider text-muted-foreground pt-2">
+                {confirmedWindowsList.length} / {TIME_WINDOWS.length} confirmed
+              </div>
+            </div>
+            <span className="font-sans text-xs font-medium uppercase tracking-widest text-muted-foreground">
+              Sarah Chen · Tier 1 VIP
+            </span>
+          </div>
 
-        <Accordion
+          <Accordion
           type="multiple"
           value={openWindowIds}
           onValueChange={setOpenWindowIds}
-          className="rounded-lg ring-1 ring-foreground/10 overflow-hidden [&>div:not(:last-child)]:border-b [&>div:not(:last-child)]:border-border"
+          className="rounded-lg ring-1 ring-foreground/10 [&>div:not(:last-child)]:border-b [&>div:not(:last-child)]:border-foreground/10"
         >
           {TIME_WINDOWS.map((window) => {
             const windowChefIds =
@@ -477,15 +462,11 @@ export default function PreferencePortalCanvas() {
               </div>
             );
           })}
-        </Accordion>
+          </Accordion>
+        </div>
 
         <div className="flex justify-end">
-          <Button
-            size="lg"
-            disabled={!allConfirmed}
-            onClick={handleSubmit}
-          >
-            <Icon as={BiSend} size="sm" />
+          <Button disabled={!allConfirmed} onClick={handleSubmit}>
             Review &amp; submit all
           </Button>
         </div>

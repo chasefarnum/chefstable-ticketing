@@ -55,13 +55,13 @@ export function CanvasProgressStrip({
     <div
       data-slot="canvas-progress-strip"
       className={cn(
-        "sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-background/95 backdrop-blur px-6 md:px-10 xl:px-14 py-3",
+        "sticky top-0 z-30 flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-border bg-background/95 backdrop-blur px-6 md:px-10 xl:px-14 py-3 md:flex-nowrap",
         className,
       )}
     >
       <div
         className={cn(
-          "flex items-center gap-2 font-mono text-xs uppercase tracking-wider",
+          "flex min-w-0 items-center gap-2 font-mono text-xs uppercase tracking-wider",
           urgency ? "text-destructive" : "text-muted-foreground",
         )}
       >
@@ -75,7 +75,7 @@ export function CanvasProgressStrip({
 
       <nav
         aria-label="Window progress"
-        className="flex items-center gap-2 overflow-x-auto"
+        className="order-last flex min-w-0 basis-full items-center justify-start gap-2 overflow-x-auto md:order-none md:basis-auto md:flex-1 md:justify-center"
       >
         {windows.map((w) => {
           const isActive = w.id === activeId;
@@ -100,7 +100,7 @@ export function CanvasProgressStrip({
               />
               <span
                 className={cn(
-                  "font-mono text-[10px] uppercase tracking-wider whitespace-nowrap",
+                  "font-mono font-light text-[10px] uppercase tracking-wider whitespace-nowrap",
                   isActive ? "text-foreground" : "text-muted-foreground",
                 )}
               >

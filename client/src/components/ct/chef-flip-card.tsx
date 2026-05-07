@@ -1,5 +1,4 @@
 import * as React from "react";
-import { motion } from "framer-motion";
 import { BiSolidStar, BiPlus } from "react-icons/bi";
 import {
   Card,
@@ -75,16 +74,16 @@ export function ChefFlipCard({
   const [isHoveringViewMenu, setIsHoveringViewMenu] = React.useState(false);
 
   return (
-    <motion.div layout className={cn("h-full", className)}>
+    <div className={cn("h-full", className)}>
       <Card
         data-slot="chef-flip-card"
         data-state={expanded ? "back" : "front"}
         data-density={density}
         className={cn(
           "group/chef-flip-card h-full p-5 gap-4 has-data-[slot=card-footer]:pb-5",
-          "dark:bg-background",
-          isRanked && "ring-2 ring-accent/60",
-          isPool && isRanked && "opacity-75",
+          isRanked
+            ? "ring-2 ring-inset ring-foreground bg-card dark:bg-card"
+            : "dark:bg-background",
         )}
       >
         {!expanded ? (
@@ -99,7 +98,7 @@ export function ChefFlipCard({
                 }}
               />
               {isRanked && rank !== undefined && (
-                <div className="absolute top-2 left-2 z-20 h-7 w-7 rounded-full bg-accent text-accent-foreground flex items-center justify-center font-mono text-xs font-semibold">
+                <div className="absolute top-2 left-2 z-20 h-7 w-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-mono text-xs font-semibold">
                   {rank}
                 </div>
               )}
@@ -276,7 +275,7 @@ export function ChefFlipCard({
           </CardFooter>
         )}
       </Card>
-    </motion.div>
+    </div>
   );
 }
 
